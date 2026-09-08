@@ -223,7 +223,12 @@ export function PayPage() {
                 ))}
               </RadioGroup>
               <div className="flex flex-col gap-2 sm:flex-row">
-                <Button type="button" size="lg" disabled={busy || !selected} onClick={() => void pay()}>
+                <Button
+                  type="button"
+                  size="lg"
+                  disabled={busy || !selected}
+                  onClick={() => void pay()}
+                >
                   {busy ? 'Отправляем…' : 'Оплатить'}
                 </Button>
                 <Button

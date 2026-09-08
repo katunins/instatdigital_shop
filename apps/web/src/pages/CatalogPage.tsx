@@ -54,9 +54,7 @@ export function CatalogPage() {
         <h1 className="text-xl font-bold">
           {query ? `Результаты по запросу «${params.get('q')}»` : 'Каталог'}
         </h1>
-        {query ? (
-          <p className="text-sm text-muted-foreground">{items.length} товар(ов)</p>
-        ) : null}
+        {query ? <p className="text-sm text-muted-foreground">{items.length} товар(ов)</p> : null}
       </div>
       {error ? <ErrorState title="Корзина" message={error} /> : null}
       {items.length === 0 ? (
@@ -72,13 +70,17 @@ export function CatalogPage() {
             return (
               <article key={product.id} className="flex flex-col rounded-sm bg-white p-3">
                 <h2 className="amazon-link line-clamp-2 text-[16px] leading-5">{product.title}</h2>
-                <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{product.description}</p>
+                <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
+                  {product.description}
+                </p>
                 <p className="mt-1 text-[11px] text-muted-foreground">{product.sku}</p>
                 <div className="mt-2">
                   <Price kopecks={product.price} />
                 </div>
                 {available ? (
-                  <p className="mt-1 text-xs text-muted-foreground">В наличии: {product.stock} шт.</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    В наличии: {product.stock} шт.
+                  </p>
                 ) : (
                   <Badge variant="outline" className="mt-2 w-fit">
                     Нет в наличии

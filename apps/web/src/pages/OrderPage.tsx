@@ -120,7 +120,10 @@ export function OrderPage() {
       </Card>
 
       {order.paymentMethod === 'card' && !paid ? (
-        <Link to={`/orders/${order.id}/pay`} className={cn(buttonVariants({ size: 'lg' }), 'w-fit')}>
+        <Link
+          to={`/orders/${order.id}/pay`}
+          className={cn(buttonVariants({ size: 'lg' }), 'w-fit')}
+        >
           {waiting ? 'К статусу оплаты' : 'Оплатить заказ'}
         </Link>
       ) : null}

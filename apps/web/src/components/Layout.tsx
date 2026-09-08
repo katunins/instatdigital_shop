@@ -84,7 +84,10 @@ export function Layout() {
             >
               Каталог
             </NavLink>
-            <NavLink to="/cart" className="rounded-sm px-2 py-1 hover:outline hover:outline-1 hover:outline-white">
+            <NavLink
+              to="/cart"
+              className="rounded-sm px-2 py-1 hover:outline hover:outline-1 hover:outline-white"
+            >
               Корзина
             </NavLink>
             <NavLink

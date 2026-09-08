@@ -77,7 +77,9 @@ export function CartPage() {
             >
               <div>
                 <p className="text-lg leading-5">{item.title}</p>
-                <p className="mt-1 text-xs text-muted-foreground">{formatMoney(item.unitPrice)} за шт.</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {formatMoney(item.unitPrice)} за шт.
+                </p>
                 <div className="mt-3 flex flex-wrap items-end gap-3">
                   <div className="grid gap-1">
                     <Label htmlFor={`qty-${item.productId}`}>Кол-во</Label>

@@ -347,7 +347,12 @@ export function CheckoutPage() {
             <CardTitle>Сумма заказа</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-3">
-            <Button type="submit" size="lg" className="w-full" disabled={orderMutation.isLoading || quoting}>
+            <Button
+              type="submit"
+              size="lg"
+              className="w-full"
+              disabled={orderMutation.isLoading || quoting}
+            >
               {orderMutation.isLoading
                 ? 'Оформляем…'
                 : draft.paymentMethod === 'card'
