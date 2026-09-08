@@ -11,7 +11,7 @@ import {
 import { ErrorState, LoadingState, PageSkeleton } from '@/components/Status';
 import { deliveryLabel, Totals } from '@/components/Totals';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { isAppApiError } from '@/lib/apiError';
@@ -153,11 +153,11 @@ export function PayPage() {
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
-      <div className="grid gap-6">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Оплата картой</h1>
-          <p className="text-muted-foreground">
+    <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
+      <div className="grid gap-4">
+        <div className="rounded-sm bg-white px-4 py-3">
+          <h1 className="text-2xl font-bold">Оплата картой</h1>
+          <p className="text-sm text-muted-foreground">
             Тестовая форма: выберите карту по названию и маске. Номер и CVC не нужны.
           </p>
         </div>
@@ -202,23 +202,28 @@ export function PayPage() {
               <RadioGroup
                 value={selected?.id ?? ''}
                 onValueChange={setCardId}
-                className="grid gap-3"
+                className="grid gap-2"
               >
                 {sandboxQuery.data?.cards.map((card) => (
                   <label
                     key={card.id}
-                    className="flex cursor-pointer items-start gap-3 rounded-md border p-3"
+                    className={cn(
+                      'flex cursor-pointer items-start gap-3 rounded-sm border p-3',
+                      (selected?.id ?? sandboxQuery.data?.cards[0]?.id) === card.id
+                        ? 'border-[#c45500] bg-[#fcf5ee]'
+                        : 'border-[#d5d9d9]',
+                    )}
                   >
                     <RadioGroupItem value={card.id} id={card.id} />
                     <span>
-                      <span className="block font-medium">{card.title}</span>
+                      <span className="block font-bold">{card.title}</span>
                       <span className="text-sm text-muted-foreground">{card.maskedNumber}</span>
                     </span>
                   </label>
                 ))}
               </RadioGroup>
               <div className="flex flex-col gap-2 sm:flex-row">
-                <Button type="button" disabled={busy || !selected} onClick={() => void pay()}>
+                <Button type="button" size="lg" disabled={busy || !selected} onClick={() => void pay()}>
                   {busy ? 'Отправляем…' : 'Оплатить'}
                 </Button>
                 <Button
@@ -234,12 +239,12 @@ export function PayPage() {
           </Card>
         ) : null}
       </div>
-      <aside>
+      <aside className="h-fit lg:sticky lg:top-24">
         <Card>
           <CardHeader>
             <CardTitle>Заказ {order.number}</CardTitle>
           </CardHeader>
-          <CardContent className="grid gap-4">
+          <CardContent className="grid gap-3">
             <ul className="grid gap-2 text-sm">
               {order.items.map((item) => (
                 <li key={item.productId} className="flex justify-between gap-3">
@@ -252,10 +257,7 @@ export function PayPage() {
             </ul>
             <p className="text-sm text-muted-foreground">{deliveryLabel(order.delivery)}</p>
             <Totals subtotal={order.subtotal} shipping={order.shipping} total={order.total} />
-            <Link
-              to={`/orders/${order.id}`}
-              className={cn(buttonVariants({ variant: 'ghost' }), 'w-fit')}
-            >
+            <Link to={`/orders/${order.id}`} className="amazon-link text-sm">
               К заказу
             </Link>
           </CardContent>

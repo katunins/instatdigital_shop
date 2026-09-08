@@ -5,10 +5,14 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export function PageSkeleton() {
   return (
-    <div className="grid gap-4">
-      <Skeleton className="h-8 w-48" />
-      <Skeleton className="h-40 w-full" />
-      <Skeleton className="h-40 w-full" />
+    <div className="grid gap-3">
+      <Skeleton className="h-16 w-full rounded-sm bg-white" />
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <Skeleton className="h-72 rounded-sm bg-white" />
+        <Skeleton className="h-72 rounded-sm bg-white" />
+        <Skeleton className="h-72 rounded-sm bg-white" />
+        <Skeleton className="h-72 rounded-sm bg-white" />
+      </div>
     </div>
   );
 }
@@ -38,13 +42,7 @@ export function ErrorState({
       <AlertDescription className="flex flex-col gap-3">
         <p>{message}</p>
         {onRetry ? (
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="w-fit bg-background"
-            onClick={onRetry}
-          >
+          <Button type="button" variant="outline" size="sm" className="w-fit" onClick={onRetry}>
             Повторить
           </Button>
         ) : null}

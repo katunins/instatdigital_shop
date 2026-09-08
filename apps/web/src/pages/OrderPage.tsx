@@ -55,8 +55,10 @@ export function OrderPage() {
   const cancelled = payment?.status === 'cancelled' || order.paymentStatus === 'cancelled';
 
   return (
-    <div className="grid gap-6">
-      <h1 className="text-2xl font-semibold tracking-tight">Заказ {order.number}</h1>
+    <div className="grid gap-4">
+      <div className="rounded-sm bg-white px-4 py-4">
+        <h1 className="text-2xl font-bold">Заказ {order.number}</h1>
+      </div>
 
       {waiting ? (
         <Alert>
@@ -68,7 +70,7 @@ export function OrderPage() {
       ) : null}
 
       {paid ? (
-        <Alert>
+        <Alert variant="success">
           <AlertTitle>Оплата прошла</AlertTitle>
           <AlertDescription>
             Заказ подтверждён. Ниже состав, доставка и сумма с сервера.
@@ -77,7 +79,7 @@ export function OrderPage() {
       ) : null}
 
       {cash ? (
-        <Alert>
+        <Alert variant="success">
           <AlertTitle>Заказ оформлен, оплата при получении</AlertTitle>
           <AlertDescription>Онлайн-оплата не требуется.</AlertDescription>
         </Alert>
@@ -99,16 +101,16 @@ export function OrderPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Состав</CardTitle>
+          <CardTitle>Состав заказа</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4">
-          <ul className="grid gap-2 text-sm">
+          <ul className="grid gap-3">
             {order.items.map((item) => (
-              <li key={item.productId} className="flex justify-between gap-3">
+              <li key={item.productId} className="flex justify-between gap-3 text-sm">
                 <span>
                   {item.title} × {item.quantity}
                 </span>
-                <span>{formatMoney(item.lineTotal)}</span>
+                <span className="font-bold">{formatMoney(item.lineTotal)}</span>
               </li>
             ))}
           </ul>
@@ -118,13 +120,13 @@ export function OrderPage() {
       </Card>
 
       {order.paymentMethod === 'card' && !paid ? (
-        <Link to={`/orders/${order.id}/pay`} className={cn(buttonVariants(), 'w-fit')}>
+        <Link to={`/orders/${order.id}/pay`} className={cn(buttonVariants({ size: 'lg' }), 'w-fit')}>
           {waiting ? 'К статусу оплаты' : 'Оплатить заказ'}
         </Link>
       ) : null}
 
       <Link to="/" className={cn(buttonVariants({ variant: 'outline' }), 'w-fit')}>
-        В каталог
+        Продолжить покупки
       </Link>
     </div>
   );

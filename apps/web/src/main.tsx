@@ -20,7 +20,7 @@ function App() {
       <PersistGate
         persistor={persistor}
         loading={
-          <div className="flex min-h-svh items-center justify-center">
+          <div className="flex min-h-svh items-center justify-center bg-navy text-white">
             <LoadingState label="Восстанавливаем сессию…" />
           </div>
         }

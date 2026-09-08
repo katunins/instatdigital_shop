@@ -23,6 +23,7 @@ import {
   sameOrderBody,
   validateDraft,
 } from '@/lib/checkout';
+import { formatMoney } from '@/lib/money';
 import { cn } from '@/lib/utils';
 import { useAppDispatch, useAppSelector } from '@/store';
 import {
@@ -94,10 +95,10 @@ export function CheckoutPage() {
   }
   if (!cart || cart.items.length === 0) {
     return (
-      <div className="grid gap-4">
-        <h1 className="text-2xl font-semibold tracking-tight">Оформление заказа</h1>
-        <p className="text-muted-foreground">Пустую корзину оформить нельзя.</p>
-        <Link to="/" className={cn(buttonVariants(), 'w-fit')}>
+      <div className="rounded-sm bg-white px-6 py-10">
+        <h1 className="text-2xl font-bold">Оформление заказа</h1>
+        <p className="mt-2 text-muted-foreground">Пустую корзину оформить нельзя.</p>
+        <Link to="/" className={cn(buttonVariants({ size: 'lg' }), 'mt-4 w-fit')}>
           К каталогу
         </Link>
       </div>
@@ -150,20 +151,20 @@ export function CheckoutPage() {
   }
 
   return (
-    <form className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]" onSubmit={submit} noValidate>
-      <div className="grid gap-6">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Оформление заказа</h1>
-          <p className="text-muted-foreground">Контакты, доставка и способ оплаты.</p>
+    <form className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]" onSubmit={submit} noValidate>
+      <div className="grid gap-4">
+        <div className="rounded-sm bg-white px-4 py-3">
+          <h1 className="text-2xl font-bold">Оформление заказа</h1>
+          <p className="text-sm text-muted-foreground">Контакты, доставка и способ оплаты.</p>
         </div>
         {formError ? <ErrorState title="Оформление" message={formError} /> : null}
         {quoteNotice ? <ErrorState title="Данные обновились" message={quoteNotice} /> : null}
 
         <Card>
           <CardHeader>
-            <CardTitle>Контакты</CardTitle>
+            <CardTitle>1. Контакты</CardTitle>
           </CardHeader>
-          <CardContent className="grid max-w-md gap-4">
+          <CardContent className="grid max-w-md gap-3">
             <FormField id="name" label="Имя" error={fieldErrors.name}>
               <Input
                 id="name"
@@ -206,7 +207,7 @@ export function CheckoutPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Доставка</CardTitle>
+            <CardTitle>2. Доставка</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4">
             <RadioGroup
@@ -214,22 +215,27 @@ export function CheckoutPage() {
               onValueChange={(value) =>
                 dispatch(updateDraft({ deliveryMethod: value as DeliveryMethod }))
               }
-              className="grid max-w-md gap-3"
+              className="grid max-w-md gap-2"
             >
               {optionsQuery.data?.deliveryMethods.map((method) => (
                 <label
                   key={method.id}
-                  className="flex cursor-pointer items-start gap-3 rounded-md border p-3"
+                  className={cn(
+                    'flex cursor-pointer items-start gap-3 rounded-sm border p-3',
+                    draft.deliveryMethod === method.id
+                      ? 'border-[#c45500] bg-[#fcf5ee]'
+                      : 'border-[#d5d9d9]',
+                  )}
                 >
                   <RadioGroupItem value={method.id} id={`delivery-${method.id}`} />
                   <span>
                     <span className="block font-medium">{method.title}</span>
                     <span className="text-sm text-muted-foreground">
-                      {method.id === 'pickup'
+                      {method.price === 0
                         ? 'Бесплатно'
                         : method.freeFrom
-                          ? `390 ₽, бесплатно от ${method.freeFrom / 100} ₽`
-                          : null}
+                          ? `${formatMoney(method.price)}, бесплатно от ${formatMoney(method.freeFrom)}`
+                          : formatMoney(method.price)}
                     </span>
                   </span>
                 </label>
@@ -240,7 +246,7 @@ export function CheckoutPage() {
               <FormField id="pickupPointId" label="Пункт выдачи" error={fieldErrors.pickupPointId}>
                 <select
                   id="pickupPointId"
-                  className="flex h-10 w-full max-w-md rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="flex h-8 w-full max-w-md rounded-sm border border-[#888c8c] bg-white px-2 py-1 text-sm shadow-[0_1px_2px_rgba(15,17,17,.15)_inset] focus-visible:border-[#e77600] focus-visible:outline-none focus-visible:shadow-[0_0_0_3px_rgba(228,121,17,.5)]"
                   value={draft.pickupPointId}
                   onChange={(event) =>
                     dispatch(
@@ -306,7 +312,7 @@ export function CheckoutPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Оплата</CardTitle>
+            <CardTitle>3. Оплата</CardTitle>
           </CardHeader>
           <CardContent>
             <RadioGroup
@@ -314,12 +320,17 @@ export function CheckoutPage() {
               onValueChange={(value) =>
                 dispatch(updateDraft({ paymentMethod: value as PaymentMethod }))
               }
-              className="grid max-w-md gap-3"
+              className="grid max-w-md gap-2"
             >
               {optionsQuery.data?.paymentMethods.map((method) => (
                 <label
                   key={method.id}
-                  className="flex cursor-pointer items-start gap-3 rounded-md border p-3"
+                  className={cn(
+                    'flex cursor-pointer items-start gap-3 rounded-sm border p-3',
+                    draft.paymentMethod === method.id
+                      ? 'border-[#c45500] bg-[#fcf5ee]'
+                      : 'border-[#d5d9d9]',
+                  )}
                 >
                   <RadioGroupItem value={method.id} id={`pay-${method.id}`} />
                   <span className="font-medium">{method.title}</span>
@@ -330,12 +341,19 @@ export function CheckoutPage() {
         </Card>
       </div>
 
-      <aside className="h-fit lg:sticky lg:top-20">
+      <aside className="h-fit lg:sticky lg:top-24">
         <Card>
           <CardHeader>
-            <CardTitle>Сумма</CardTitle>
+            <CardTitle>Сумма заказа</CardTitle>
           </CardHeader>
-          <CardContent className="grid gap-4">
+          <CardContent className="grid gap-3">
+            <Button type="submit" size="lg" className="w-full" disabled={orderMutation.isLoading || quoting}>
+              {orderMutation.isLoading
+                ? 'Оформляем…'
+                : draft.paymentMethod === 'card'
+                  ? 'Оформить и перейти к оплате'
+                  : 'Оформить заказ'}
+            </Button>
             {quoting ? <LoadingState label="Считаем доставку…" /> : null}
             {quote && quote.cartVersion === cart.version ? <QuoteTotals quote={quote} /> : null}
             {!quoting && !quote ? (
@@ -343,14 +361,7 @@ export function CheckoutPage() {
                 Заполните адрес, чтобы получить стоимость доставки с сервера.
               </p>
             ) : null}
-            <Button type="submit" className="w-fit" disabled={orderMutation.isLoading || quoting}>
-              {orderMutation.isLoading
-                ? 'Оформляем…'
-                : draft.paymentMethod === 'card'
-                  ? 'Оформить и перейти к оплате'
-                  : 'Оформить заказ'}
-            </Button>
-            <Link to="/cart" className={cn(buttonVariants({ variant: 'ghost' }), 'w-fit')}>
+            <Link to="/cart" className="amazon-link text-center text-sm">
               Вернуться в корзину
             </Link>
           </CardContent>

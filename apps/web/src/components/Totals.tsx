@@ -1,4 +1,5 @@
 import type { Delivery, Quote } from '@checkout/contracts';
+import { Price } from '@/components/Price';
 import { formatMoney } from '@/lib/money';
 
 export function deliveryLabel(delivery: Delivery) {
@@ -21,7 +22,7 @@ export function Totals({
   total: number;
 }) {
   return (
-    <dl className="grid gap-2 text-sm">
+    <dl className="grid gap-2 border-t border-[#d5d9d9] pt-3 text-sm">
       <div className="flex justify-between gap-4">
         <dt className="text-muted-foreground">Товары</dt>
         <dd>{formatMoney(subtotal)}</dd>
@@ -30,9 +31,11 @@ export function Totals({
         <dt className="text-muted-foreground">Доставка</dt>
         <dd>{shipping === 0 ? 'Бесплатно' : formatMoney(shipping)}</dd>
       </div>
-      <div className="flex justify-between gap-4 text-base font-semibold">
-        <dt>Итого</dt>
-        <dd>{formatMoney(total)}</dd>
+      <div className="flex justify-between gap-4 text-lg font-bold">
+        <dt>Итого к оплате</dt>
+        <dd>
+          <Price kopecks={total} size="sm" />
+        </dd>
       </div>
     </dl>
   );
